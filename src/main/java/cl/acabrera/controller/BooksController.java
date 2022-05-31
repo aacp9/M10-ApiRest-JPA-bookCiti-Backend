@@ -1,6 +1,7 @@
 package cl.acabrera.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,10 @@ public class BooksController {
 	@Autowired
 	BooksService booksService;
 	
-	@GetMapping("/findAllByTitle/{title}")
-	public ResponseEntity<List<Books>> findAllByTitle(@PathVariable String title){
+	@GetMapping("/findAllByTitleContainingIgnoreCase/{title}")
+	public ResponseEntity<List<Books>> findAllByTitleContainingIgnoreCase(@PathVariable String title){
 		try {
-			List<Books> listBooks=booksService.findAllByTitle(title);
+			List<Books> listBooks=booksService.findAllByTitleContainingIgnoreCase(title);
 			//consultamos valor obtenido
 			if (!listBooks.isEmpty()) {
 				//retornamos la lista y un estatus de ok.
@@ -48,6 +49,10 @@ public class BooksController {
 	public ResponseEntity<List<Books>> findAll(){
 		try {
 			List<Books> listBooks=booksService.findAll();
+//			System.out.println("---------Backend-----------");
+//			System.out.println(booksService.findAll().toString());
+//			System.out.println("---------fin-----------");
+
 			//consultamos valor obtenido
 			if (!listBooks.isEmpty()) {
 				//retornamos la lista y un estatus de ok.
@@ -63,6 +68,26 @@ public class BooksController {
 		}
 	}
 
+	@GetMapping("/findByIdBook/{idBook}")
+	public ResponseEntity<Books> findByIdBook(@PathVariable int idBook) {
+		try {
+			Books book=booksService.findByIdBook(idBook);
+			//consultamos valor obtenido
+			if (!Objects.isNull(book)) {
+				//retornamos la lista y un estatus de ok.
+				return new ResponseEntity<>(book,HttpStatus.OK);
+			}else {
+				//retornamos un estatus de no encontrado
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			// en este caso hubrá un error en el sevidor
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+		
+	}
+	
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	public void update(@RequestBody Books book) {
@@ -78,7 +103,7 @@ public class BooksController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	void save(@RequestBody Books book) {
+	public void save(@RequestBody Books book) {
 		booksService.save(book);
 	}
 

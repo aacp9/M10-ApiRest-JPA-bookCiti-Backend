@@ -14,8 +14,8 @@ public class BooksServiceImpl implements BooksService {
 	BooksRepository bookRespository;
 
 	@Override
-	public List<Books> findAllByTitle(String titleTest) {
-		return bookRespository.findAllByTitle(titleTest);
+	public List<Books> findAllByTitleContainingIgnoreCase(String titleTest) {
+		return bookRespository.findAllByTitleContainingIgnoreCase(titleTest);
 	}
 
 	@Override
@@ -37,6 +37,11 @@ public class BooksServiceImpl implements BooksService {
 	public void update(Books book) {
 		bookRespository.save(book);
 		
+	}
+
+	@Override
+	public Books findByIdBook(int idBook) {
+		return bookRespository.findByIdBook(idBook);
 	}
 	
 	
