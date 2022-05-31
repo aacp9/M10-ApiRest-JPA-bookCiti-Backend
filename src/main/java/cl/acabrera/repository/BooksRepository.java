@@ -20,9 +20,13 @@ public interface BooksRepository extends JpaRepository<Books, Integer> {
 	
 	//IMPORTANTE: el nombre del método después del By debe ser algún nombre del atributo del objeto, 
 	//este nombre de iniciar con mayúscula ya que en los setter o getter se utilza esa nomenclatura
-	List<Books> findAllByTitle(String title); 
-
+	//gracias a los componentes de jpa podemos utilizar Containg: es un like con %parametro%
+	//tambien utilzar IgnoreCase para omitir comparaciones entre minúscualas  y mayúsculas
+	//https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.query-methods.details
+	List<Books> findAllByTitleContainingIgnoreCase(String title); 
 	
+
+	Books findByIdBook(int idBook);
 	
 	
 } 
