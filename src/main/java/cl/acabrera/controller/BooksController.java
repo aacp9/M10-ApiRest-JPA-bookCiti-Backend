@@ -1,6 +1,5 @@
 package cl.acabrera.controller;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.acabrera.VO.BooksVO;
 import cl.acabrera.model.Books;
 import cl.acabrera.service.BooksService;
 
@@ -26,14 +25,15 @@ public class BooksController {
 	@Autowired
 	BooksService booksService;
 	
+
 	@GetMapping("/findAllByTitleContainingIgnoreCase/{title}")
-	public ResponseEntity<List<Books>> findAllByTitleContainingIgnoreCase(@PathVariable String title){
+	public ResponseEntity<BooksVO> findAllByTitleContainingIgnoreCase(@PathVariable String title){
 		try {
-			List<Books> listBooks=booksService.findAllByTitleContainingIgnoreCase(title);
+			BooksVO booksVO=booksService.findAllByTitleContainingIgnoreCase(title);
 			//consultamos valor obtenido
-			if (!listBooks.isEmpty()) {
+			if (!(Objects.isNull(booksVO))) {
 				//retornamos la lista y un estatus de ok.
-				return new ResponseEntity<>(listBooks,HttpStatus.OK);
+				return new ResponseEntity<>(booksVO,HttpStatus.OK);
 			}else {
 				//retornamos un estatus de no encontrado
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -46,17 +46,17 @@ public class BooksController {
 	}
 
 	@GetMapping("/findAll")
-	public ResponseEntity<List<Books>> findAll(){
+	public ResponseEntity<BooksVO> findAll(){
 		try {
-			List<Books> listBooks=booksService.findAll();
+			BooksVO booksVO=booksService.findAll();
 //			System.out.println("---------Backend-----------");
 //			System.out.println(booksService.findAll().toString());
 //			System.out.println("---------fin-----------");
 
 			//consultamos valor obtenido
-			if (!listBooks.isEmpty()) {
+			if (!(Objects.isNull(booksVO))) {
 				//retornamos la lista y un estatus de ok.
-				return new ResponseEntity<>(listBooks,HttpStatus.OK);
+				return new ResponseEntity<>(booksVO,HttpStatus.OK);
 			}else {
 				//retornamos un estatus de no encontrado
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -69,13 +69,13 @@ public class BooksController {
 	}
 
 	@GetMapping("/findByIdBook/{idBook}")
-	public ResponseEntity<Books> findByIdBook(@PathVariable int idBook) {
+	public ResponseEntity<BooksVO> findByIdBook(@PathVariable int idBook) {
 		try {
-			Books book=booksService.findByIdBook(idBook);
+			BooksVO booksVO=booksService.findByIdBook(idBook);
 			//consultamos valor obtenido
-			if (!Objects.isNull(book)) {
+			if (!Objects.isNull(booksVO)) {
 				//retornamos la lista y un estatus de ok.
-				return new ResponseEntity<>(book,HttpStatus.OK);
+				return new ResponseEntity<>(booksVO,HttpStatus.OK);
 			}else {
 				//retornamos un estatus de no encontrado
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -89,22 +89,60 @@ public class BooksController {
 	}
 	
 	@PutMapping
-	@ResponseStatus(HttpStatus.OK)
-	public void update(@RequestBody Books book) {
-		booksService.update(book);
+	public ResponseEntity<BooksVO> update(@RequestBody Books book) {
+		try {
+			BooksVO booksVO=booksService.update(book);
+			//consultamos valor obtenido
+			if (!Objects.isNull(booksVO)) {
+				//retornamos la lista y un estatus de ok.
+				return new ResponseEntity<>(booksVO,HttpStatus.OK);
+			}else {
+				//retornamos un estatus de no encontrado
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			// en este caso hubrá un error en el sevidor
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
 	}
 
 	@DeleteMapping
-	@ResponseStatus(HttpStatus.OK)
-	public void delete(@RequestBody Books book) {
-		booksService.delete(book);
+	public ResponseEntity<BooksVO> delete(@RequestBody Books book) {
+		try {
+			BooksVO booksVO=booksService.delete(book);
+			//consultamos valor obtenido
+			if (!Objects.isNull(booksVO)) {
+				//retornamos la lista y un estatus de ok.
+				return new ResponseEntity<>(booksVO,HttpStatus.OK);
+			}else {
+				//retornamos un estatus de no encontrado
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			// en este caso hubrá un error en el sevidor
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public void save(@RequestBody Books book) {
-		booksService.save(book);
+	public ResponseEntity<BooksVO> save(@RequestBody Books book) {
+		try {
+			BooksVO booksVO=booksService.save(book);
+			//consultamos valor obtenido
+			if (!Objects.isNull(booksVO)) {
+				//retornamos la lista y un estatus de ok.
+				return new ResponseEntity<>(booksVO,HttpStatus.CREATED);
+			}else {
+				//retornamos un estatus de no encontrado
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			// en este caso hubrá un error en el sevidor
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
 	}
 
 }
